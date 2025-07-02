@@ -686,6 +686,26 @@
       background: #ffe082;
       border-radius: 8px;
     }
+    /* -------- Loading spinner for market iframe -------- */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .loading-spinner {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fffbe6;
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 8px solid #ffe082;
+      border-top: 8px solid #ff9800;
+      animation: spin 1s linear infinite;
+    }
   </style>
 </head>
 <body>
@@ -987,9 +1007,21 @@
               <button class="launch-btn" onclick="window.open('https://t.co/aSsQXTq8vN')">Launch 🚀</button>
             </div>
             <div class="market-iframe-box">
-              <iframe src="https://dexscreener.com/solana/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263?embed=1&theme=light" allowfullscreen></iframe>
+              <div class="loading-spinner"><div class="spinner"></div></div>
+              <iframe src="https://dexscreener.com/solana/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263?embed=1&theme=light" allowfullscreen style="display:none"></iframe>
             </div>
           `;
+          // Hide spinner once iframe loads
+          setTimeout(() => {
+            const iframeEl = mainContentBox.querySelector('.market-iframe-box iframe');
+            const spinnerEl = mainContentBox.querySelector('.loading-spinner');
+            if (iframeEl) {
+              iframeEl.addEventListener('load', () => {
+                if (spinnerEl) spinnerEl.style.display = 'none';
+                iframeEl.style.display = 'block';
+              });
+            }
+          }, 0);
         } else {
           // 聊天频道：恢复聊天界面
           mainContentBox.innerHTML = `
